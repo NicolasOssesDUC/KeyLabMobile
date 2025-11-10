@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_sm"
+    app:cardCornerRadius="@dimen/card_radius"
+    app:cardElevation="@dimen/card_elevation"
+    app:strokeColor="@color/border_light"
+    app:strokeWidth="@dimen/card_stroke">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Product Image -->
+        <ImageView
+            android:id="@+id/ivProductoImagen"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/imagen_producto"
+            tools:src="@mipmap/ic_launcher" />
+
+        <!-- Content Container -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_md">
+
+            <!-- Product Name -->
+            <TextView
+                android:id="@+id/tvProductoNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_md"
+                android:textColor="@color/text_primary"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:lineSpacingExtra="2dp"
+                tools:text="Keychron K8 Pro Mechanical Keyboard" />
+
+            <!-- Price -->
+            <TextView
+                android:id="@+id/tvProductoPrecio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xs"
+                android:textSize="@dimen/text_lg"
+                android:textStyle="bold"
+                android:textColor="@color/keylab_primary"
+                tools:text="$89.990" />
+
+            <!-- Category Chip -->
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCategoria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_sm"
+                style="@style/Widget.Material3.Chip.Assist"
+                android:textSize="@dimen/text_xs"
+                app:chipBackgroundColor="@color/surface_tint"
+                app:chipStrokeColor="@color/keylab_primary_light"
+                app:chipStrokeWidth="1dp"
+                tools:text="Teclados" />
+
+            <!-- Out of Stock Chip -->
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipSinStock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_sm"
+                android:text="@string/sin_stock"
+                android:textSize="@dimen/text_xs"
+                android:textColor="@android:color/white"
+                android:visibility="gone"
+                style="@style/Widget.Material3.Chip.Assist"
+                app:chipBackgroundColor="@color/stock_out"
+                tools:visibility="visible" />
+
+            <!-- Add to Cart Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAgregarCarrito"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="@dimen/spacing_md"
+                android:text="@string/agregar_al_carrito"
+                android:textSize="@dimen/text_sm"
+                android:textColor="@android:color/white"
+                app:icon="@drawable/ic_shopping_cart"
+                app:iconGravity="textStart"
+                app:iconTint="@android:color/white"
+                app:backgroundTint="@android:color/black"
+                app:cornerRadius="@dimen/spacing_sm" />
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

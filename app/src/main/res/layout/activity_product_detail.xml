@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_background">
+
+    <!-- AppBar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/dark_surface"
+            app:titleTextColor="@color/dark_text_primary"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/dark_text_primary" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Progress Bar (loading) -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/spacing_xl"
+                android:indeterminateTint="@color/keylab_primary"
+                android:visibility="visible" />
+
+            <!-- Content Layout -->
+            <LinearLayout
+                android:id="@+id/contentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <!-- Imagen del producto -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="320dp"
+                    android:layout_margin="@dimen/spacing_md"
+                    app:cardCornerRadius="@dimen/card_radius"
+                    app:cardElevation="@dimen/card_elevation"
+                    app:strokeColor="@color/border_light"
+                    app:strokeWidth="@dimen/card_stroke">
+
+                    <ImageView
+                        android:id="@+id/ivProductImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="Imagen del producto"
+                        android:scaleType="centerCrop"
+                        tools:src="@drawable/ic_placeholder_image" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Info Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_md"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:layout_marginEnd="@dimen/spacing_md"
+                    android:layout_marginBottom="@dimen/spacing_sm"
+                    app:cardBackgroundColor="@color/dark_surface"
+                    app:cardCornerRadius="@dimen/card_radius"
+                    app:cardElevation="@dimen/card_elevation">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/spacing_md">
+
+                        <!-- Nombre del producto -->
+                        <TextView
+                            android:id="@+id/tvProductName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/dark_text_primary"
+                            android:textSize="@dimen/text_xl"
+                            android:textStyle="bold"
+                            tools:text="Keychron K8 Pro" />
+
+                        <!-- Categoría -->
+                        <TextView
+                            android:id="@+id/tvProductCategory"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:textColor="@color/dark_text_secondary"
+                            android:textSize="@dimen/text_sm"
+                            tools:text="Teclados • 75%" />
+
+                        <!-- Precio -->
+                        <TextView
+                            android:id="@+id/tvProductPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_md"
+                            android:textColor="@color/keylab_primary"
+                            android:textSize="@dimen/text_xxl"
+                            android:textStyle="bold"
+                            tools:text="$89.990" />
+
+                        <!-- Stock -->
+                        <TextView
+                            android:id="@+id/tvStock"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:textColor="@color/stock_available"
+                            android:textSize="@dimen/text_sm"
+                            tools:text="Stock disponible: 15 unidades" />
+
+                        <!-- Divider -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/spacing_md"
+                            android:layout_marginBottom="@dimen/spacing_md"
+                            android:background="@color/divider" />
+
+                        <!-- Descripción -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Descripción"
+                            android:textColor="@color/dark_text_primary"
+                            android:textSize="@dimen/text_md"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvProductDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:lineSpacingExtra="4dp"
+                            android:textColor="@color/dark_text_secondary"
+                            android:textSize="@dimen/text_sm"
+                            tools:text="Teclado mecánico inalámbrico con switches hot-swappable. Conectividad Bluetooth 5.1 y cable USB-C. Iluminación RGB personalizable. Compatible con Windows y macOS." />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Cantidad y Agregar al Carrito Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_md"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:layout_marginEnd="@dimen/spacing_md"
+                    android:layout_marginBottom="@dimen/spacing_md"
+                    app:cardBackgroundColor="@color/dark_surface"
+                    app:cardCornerRadius="@dimen/card_radius"
+                    app:cardElevation="@dimen/card_elevation">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/spacing_md">
+
+                        <!-- Label Cantidad -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cantidad"
+                            android:textColor="@color/dark_text_primary"
+                            android:textSize="@dimen/text_md"
+                            android:textStyle="bold" />
+
+                        <!-- Controles de Cantidad -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <!-- Botón Disminuir -->
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnDecrease"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:text="-"
+                                android:textColor="@color/dark_text_primary"
+                                android:textSize="@dimen/text_lg"
+                                app:cornerRadius="8dp"
+                                app:strokeColor="@color/border_light" />
+
+                            <!-- Cantidad -->
+                            <TextView
+                                android:id="@+id/tvCantidad"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textColor="@color/dark_text_primary"
+                                android:textSize="@dimen/text_xl"
+                                android:textStyle="bold"
+                                tools:text="1" />
+
+                            <!-- Botón Aumentar -->
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnIncrease"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:text="+"
+                                android:textColor="@color/dark_text_primary"
+                                android:textSize="@dimen/text_lg"
+                                app:cornerRadius="8dp"
+                                app:strokeColor="@color/border_light" />
+
+                        </LinearLayout>
+
+                        <!-- Precio Total -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_md"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Total:"
+                                android:textColor="@color/dark_text_secondary"
+                                android:textSize="@dimen/text_md" />
+
+                            <TextView
+                                android:id="@+id/tvTotalPrice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/keylab_primary"
+                                android:textSize="@dimen/text_xl"
+                                android:textStyle="bold"
+                                tools:text="$89.990" />
+
+                        </LinearLayout>
+
+                        <!-- Botón Agregar al Carrito -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAddToCart"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:layout_marginTop="@dimen/spacing_md"
+                            android:text="Agregar al Carrito"
+                            android:textSize="@dimen/text_md"
+                            app:backgroundTint="@color/keylab_primary"
+                            app:cornerRadius="8dp"
+                            app:icon="@drawable/ic_shopping_cart"
+                            app:iconGravity="textStart"
+                            app:iconPadding="@dimen/spacing_sm" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
