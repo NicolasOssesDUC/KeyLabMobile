@@ -10,3 +10,8 @@ build/
 
 # Local configuration
 local.properties
+
+#archivos grandes o temporales 
+*.log
+*.tmp
+*.hprof
