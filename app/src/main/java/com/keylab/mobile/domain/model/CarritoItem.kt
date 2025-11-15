@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
  * Modelo para items en el carrito de compras
  * Persistido localmente en Room
  */
-@Entity(tableName = "carrito_items")
+@Entity(tableName = "carrito_items")  //@define nombre de la tabla
 data class CarritoItem(
     @PrimaryKey
     val productoId: Int,

@@ -2,7 +2,6 @@ package com.keylab.mobile.data.remote
 
 /**
  * Sealed class para manejar estados de respuestas HTTP
- * Representa Success, Error o Loading
  */
 sealed class ApiResponse<out T> {
     // Éxito con datos

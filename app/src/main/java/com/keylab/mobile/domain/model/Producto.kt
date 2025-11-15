@@ -28,7 +28,7 @@ data class Producto(
     val stock: Int,
 
     @SerializedName("imagen_url")
-    @ColumnInfo(name = "imagen_url")
+    @ColumnInfo(name = "imagen_url")  //cambia el nombre de la columna en la tabla
     val imagenUrl: String? = null,
 
 
