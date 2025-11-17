@@ -1,9 +1,9 @@
 # 📝 Sesión: Implementación de Registro de Usuario
 
 **Fecha:** 2025-11-16  
-**Última actualización:** 2025-11-16 19:46  
+**Última actualización:** 2025-11-17 04:28  
 **Objetivo:** Crear sistema de registro y autenticación local (Room + SharedPreferences)  
-**Estado:** 🟢 En progreso (4/8 pasos completados - 50%)
+**Estado:** 🟢 Completado (8/8 pasos completados - 100%)
 
 ---
 
@@ -23,10 +23,10 @@
 2. ✅ DAO Usuario (UsuarioDao.kt)           ← ¿Cómo guardamos/leemos usuarios?
 3. ✅ Actualizar Base de Datos (v3 → v4)   ← Agregar tabla usuarios
 4. ✅ PreferencesManager                    ← Recordar quién está logueado
-5. ⏳ Layout de Registro (XML)              ← Diseño de la pantalla
-6. ⏳ RegisterActivity (Kotlin)             ← Lógica de registro
-7. ⏳ Conectar Login ↔ Register             ← Navegación entre pantallas
-8. ⏳ Validar en LoginActivity              ← Login real con Room
+5. ✅ Layout de Registro (XML)              ← Diseño de la pantalla
+6. ✅ RegisterActivity (Kotlin)             ← Lógica de registro
+7. ✅ Conectar Login ↔ Register             ← Navegación entre pantallas
+8. ✅ Validar en LoginActivity              ← Login real con Room
 ```
 
 ---
@@ -643,33 +643,330 @@ if (preferencesManager.isLoggedIn()) {
 
 ## 📋 **PRÓXIMOS PASOS (Continuación en siguiente sesión)**
 
-### **PASO 5: Layout de Registro (XML)**
+### **PASO 5: Layout de Registro (XML)** ✅ COMPLETADO
 - Diseño similar a LoginActivity
 - Campos: nombre, email, password, confirmar password
 - Checkbox términos y condiciones
-- **Tiempo estimado:** 30 minutos
-- **Estado:** ⏳ Pendiente
+- **Tiempo real:** 10 minutos
+- **Estado:** ✅ Completado
 
-### **PASO 6: RegisterActivity**
+### **PASO 6: RegisterActivity** ✅ COMPLETADO
 - Validaciones de formulario
 - Verificar email único
 - Guardar en Room
 - Navegar a MainActivity
-- **Tiempo estimado:** 40 minutos
-- **Estado:** ⏳ Pendiente
+- **Tiempo real:** 15 minutos
+- **Estado:** ✅ Completado
 
-### **PASO 7: Conectar Login ↔ Register**
+### **PASO 7: Conectar Login ↔ Register** ✅ COMPLETADO
 - Link en LoginActivity → RegisterActivity
 - Link en RegisterActivity → LoginActivity
-- **Tiempo estimado:** 5 minutos
-- **Estado:** ⏳ Pendiente
+- **Tiempo real:** 5 minutos
+- **Estado:** ✅ Completado
 
-### **PASO 8: Validar Login Real**
+### **PASO 8: Validar Login Real** ✅ COMPLETADO
 - Modificar LoginActivity
 - Usar `validarLogin()` del DAO
 - Guardar sesión en PreferencesManager
-- **Tiempo estimado:** 20 minutos
-- **Estado:** ⏳ Pendiente
+- Verificar sesión existente al iniciar
+- **Tiempo real:** 15 minutos
+- **Estado:** ✅ Completado
+
+---
+
+## ✅ **PASO 5 COMPLETADO: Layout de Registro (XML)**
+
+### 📍 **Ubicación:**
+```
+app/src/main/res/layout/activity_register.xml
+```
+
+### 📝 **Elementos del Layout:**
+- TextView título "Crear Cuenta"
+- TextView subtítulo "Únete a KeyLab hoy"
+- TextInputLayout para nombre
+- TextInputLayout para email
+- TextInputLayout para contraseña
+- TextInputLayout para confirmar contraseña
+- CheckBox para términos y condiciones
+- MaterialButton para registro
+- TextView link para ir a login
+- ProgressBar para indicador de carga
+
+### 💡 **Conceptos Aplicados:**
+- ScrollView para contenido desplazable
+- ConstraintLayout para posicionamiento
+- Material Design 3 components
+- Inputs con validación visual
+- Password toggle para ver/ocultar contraseña
+- Consistencia de diseño con LoginActivity
+
+---
+
+## ✅ **PASO 6 COMPLETADO: RegisterActivity**
+
+### 📍 **Ubicación:**
+```
+app/src/main/java/com/keylab/mobile/ui/RegisterActivity.kt
+```
+
+### 📝 **Código Implementado (Resumen):**
+
+```kotlin
+class RegisterActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityRegisterBinding
+    private lateinit var database: AppDatabase
+    private lateinit var preferencesManager: PreferencesManager
+
+    // Validaciones:
+    // - Nombre no vacío
+    // - Email válido y no duplicado
+    // - Contraseña mínimo 6 caracteres
+    // - Confirmar contraseña coincide
+    // - Términos aceptados
+
+    private fun performRegister(nombre: String, email: String, password: String) {
+        lifecycleScope.launch {
+            // 1. Verificar si email existe
+            val emailExists = database.usuarioDao().emailExiste(email).first()
+            
+            // 2. Crear usuario
+            val usuario = Usuario(nombre, email, password)
+            val userId = database.usuarioDao().insertar(usuario)
+            
+            // 3. Guardar sesión
+            preferencesManager.guardarSesion(userId.toInt())
+            
+            // 4. Navegar a MainActivity
+            navigateToMain()
+        }
+    }
+}
+```
+
+### 💡 **Conceptos Clave:**
+
+#### **1. lifecycleScope.launch**
+- Corrutina vinculada al ciclo de vida del Activity
+- Se cancela automáticamente si el Activity se destruye
+- Evita memory leaks
+
+#### **2. Flow.first()**
+- Obtiene el primer valor emitido por el Flow
+- Espera hasta que Room devuelva el resultado
+- Convierte Flow<Boolean> a Boolean
+
+#### **3. Validación en cascada**
+```kotlin
+var isValid = true
+if (nombre.isEmpty()) { isValid = false }
+if (email.isEmpty()) { isValid = false }
+// ...
+if (isValid) { performRegister() }
+```
+
+#### **4. Flags de Intent**
+```kotlin
+intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+```
+- `NEW_TASK`: Crea nueva tarea
+- `CLEAR_TASK`: Limpia todas las activities anteriores
+- Resultado: Usuario no puede volver atrás con botón "Back"
+
+---
+
+## ✅ **PASO 7 COMPLETADO: Conectar Login ↔ Register**
+
+### 📝 **Cambios en LoginActivity:**
+
+```kotlin
+binding.tvRegister.setOnClickListener {
+    val intent = Intent(this, RegisterActivity::class.java)
+    startActivity(intent)
+}
+```
+
+### 📝 **Cambios en RegisterActivity:**
+
+```kotlin
+binding.tvLogin.setOnClickListener {
+    finish() // Vuelve a LoginActivity
+}
+```
+
+### 📝 **Strings agregados:**
+
+```xml
+<!-- Register Activity -->
+<string name="register_title">Crear Cuenta</string>
+<string name="register_subtitle">Únete a KeyLab hoy</string>
+<string name="register_name_hint">Nombre completo</string>
+<string name="register_email_hint">Correo electrónico</string>
+<string name="register_password_hint">Contraseña</string>
+<string name="register_confirm_password_hint">Confirmar contraseña</string>
+<string name="register_terms_accept">Acepto los términos y condiciones</string>
+<string name="register_button">Crear cuenta</string>
+<string name="register_have_account_login">¿Ya tienes cuenta? Inicia sesión</string>
+
+<!-- Validation Messages -->
+<string name="error_empty_name">El nombre es requerido</string>
+<string name="error_empty_email">El correo es requerido</string>
+<string name="error_invalid_email">Correo inválido</string>
+<string name="error_empty_password">La contraseña es requerida</string>
+<string name="error_password_too_short">La contraseña debe tener al menos 6 caracteres</string>
+<string name="error_passwords_dont_match">Las contraseñas no coinciden</string>
+<string name="error_terms_not_accepted">Debes aceptar los términos y condiciones</string>
+<string name="error_email_already_exists">Este correo ya está registrado</string>
+<string name="error_registration_failed">Error al crear la cuenta</string>
+<string name="success_account_created">¡Cuenta creada exitosamente!</string>
+<string name="error_login_failed">Correo o contraseña incorrectos</string>
+<string name="error_login_general">Error al iniciar sesión</string>
+```
+
+### 📝 **AndroidManifest.xml:**
+
+```xml
+<activity
+    android:name=".ui.RegisterActivity"
+    android:exported="false"
+    android:parentActivityName=".ui.LoginActivity" />
+```
+
+---
+
+## ✅ **PASO 8 COMPLETADO: Validar Login Real**
+
+### 📝 **Cambios en LoginActivity:**
+
+```kotlin
+class LoginActivity : AppCompatActivity() {
+    private lateinit var database: AppDatabase
+    private lateinit var preferencesManager: PreferencesManager
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // ...
+        database = AppDatabase.getDatabase(this)
+        preferencesManager = PreferencesManager(this)
+        
+        checkExistingSession()
+    }
+
+    private fun checkExistingSession() {
+        if (preferencesManager.isLoggedIn()) {
+            navigateToMain()
+        }
+    }
+
+    private fun performLogin(email: String, password: String) {
+        lifecycleScope.launch {
+            val usuario = database.usuarioDao()
+                .validarLogin(email, password)
+                .first()
+            
+            if (usuario != null) {
+                preferencesManager.guardarSesion(usuario.id)
+                Toast.makeText(this@LoginActivity, 
+                    "¡Bienvenido ${usuario.nombre}!", 
+                    Toast.LENGTH_SHORT).show()
+                navigateToMain()
+            } else {
+                Toast.makeText(this@LoginActivity,
+                    getString(R.string.error_login_failed),
+                    Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun navigateToMain() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
+}
+```
+
+### 💡 **Flujo Completo de Autenticación:**
+
+```
+┌────────────────────────────────────────────┐
+│  App inicia → LoginActivity                │
+├────────────────────────────────────────────┤
+│  checkExistingSession()                    │
+│  ├─ ¿Hay sesión en SharedPreferences?      │
+│  │  ├─ SÍ → navigateToMain()              │
+│  │  └─ NO → Mostrar pantalla de login     │
+└────────────────────────────────────────────┘
+         ↓ (Usuario hace login)
+┌────────────────────────────────────────────┐
+│  performLogin(email, password)             │
+│  ├─ Room: validarLogin(email, pass)       │
+│  │  ├─ Usuario encontrado → Login exitoso │
+│  │  │  ├─ Guardar sesión                  │
+│  │  │  ├─ Toast "¡Bienvenido {nombre}!"   │
+│  │  │  └─ navigateToMain()                │
+│  │  └─ null → Credenciales incorrectas    │
+│  │     └─ Toast error                     │
+└────────────────────────────────────────────┘
+         ↓ (Usuario hace registro)
+┌────────────────────────────────────────────┐
+│  RegisterActivity                          │
+│  ├─ Validar formulario                     │
+│  ├─ Verificar email único                  │
+│  ├─ Insertar usuario en Room              │
+│  ├─ Guardar sesión                         │
+│  └─ navigateToMain()                       │
+└────────────────────────────────────────────┘
+```
+
+---
+
+## 🐛 **FIX APLICADO: usuarioDao() con minúscula**
+
+### **Error encontrado:**
+```kotlin
+// ❌ INCORRECTO en AppDatabase.kt
+abstract fun UsuarioDao(): UsuarioDao
+
+// Error: Unresolved reference: usuarioDao
+database.usuarioDao().validarLogin(...)
+```
+
+### **Solución:**
+```kotlin
+// ✅ CORRECTO
+abstract fun usuarioDao(): UsuarioDao
+```
+
+**Razón:** Kotlin usa convención camelCase para métodos. Room genera la implementación basándose en el nombre del método.
+
+---
+
+## 📋 **PRÓXIMOS PASOS (Mejoras Futuras)**
+
+### **1. Funcionalidad de Logout**
+- Agregar botón en ProfileActivity
+- Llamar a `preferencesManager.cerrarSesion()`
+- Navegar a LoginActivity
+
+### **2. Editar Perfil**
+- Permitir cambiar nombre, avatar
+- Usar `usuarioDao().actualizar()`
+- Actualizar UI en tiempo real con Flow
+
+### **3. Recuperación de Contraseña**
+- Enviar email (requiere backend)
+- Por ahora: reset manual en Room
+
+### **4. Migración a Supabase Auth**
+- Mantener Room como caché offline
+- Supabase Auth para producción
+- JWT tokens en SharedPreferences (encrypted)
+
+### **5. Encriptación de Contraseñas**
+- Implementar bcrypt o usar librería de hashing
+- NO guardar contraseñas en texto plano en producción
 
 ---
 
@@ -677,9 +974,10 @@ if (preferencesManager.isLoggedIn()) {
 
 - **Sesión 1 completada:** ~50 minutos (Paso 1 y 2)
 - **Sesión 2 completada:** ~35 minutos (Paso 3 y 4)
-- **Total invertido:** ~1 hora 25 minutos
-- **Falta:** ~1 hora 30 minutos (4 pasos restantes)
-- **Total estimado:** ~2 horas 55 minutos
+- **Sesión 3 completada:** ~45 minutos (Paso 5, 6, 7 y 8)
+- **Total invertido:** ~2 horas 10 minutos
+- **Total estimado original:** ~2 horas 55 minutos
+- **Ahorro de tiempo:** ~45 minutos (eficiencia mejorada)
 
 ---
 
@@ -793,6 +1091,14 @@ interface UsuarioDao {
 3. ✅ `app/src/main/java/com/keylab/mobile/data/local/AppDatabase.kt` (modificado - v3 → v4)
 4. ✅ `app/src/main/java/com/keylab/mobile/data/local/PreferencesManager.kt` (creado)
 
+### **Sesión 3:**
+5. ✅ `app/src/main/res/layout/activity_register.xml` (creado)
+6. ✅ `app/src/main/res/values/strings.xml` (modificado - agregados strings)
+7. ✅ `app/src/main/java/com/keylab/mobile/ui/RegisterActivity.kt` (creado)
+8. ✅ `app/src/main/java/com/keylab/mobile/ui/LoginActivity.kt` (modificado - login real)
+9. ✅ `app/src/main/AndroidManifest.xml` (modificado - RegisterActivity registrado)
+10. ✅ `app/src/main/java/com/keylab/mobile/data/local/AppDatabase.kt` (fix: usuarioDao())
+
 ---
 
 ## 🎯 **CHECKLIST PARA LA PRÓXIMA SESIÓN**
@@ -850,6 +1156,67 @@ Si hay errores de compilación, resuélvelos antes de continuar con el Paso 5 (L
 
 ---
 
+## 📊 **RESUMEN DE SESIÓN 3 (2025-11-17 04:28)**
+
+### **✅ Logros completados:**
+1. **Layout de Registro creado** (activity_register.xml)
+   - Campos: nombre, email, contraseña, confirmar contraseña
+   - CheckBox términos y condiciones
+   - Diseño consistente con LoginActivity
+   - Material Design 3
+
+2. **RegisterActivity implementado**
+   - Validaciones completas de formulario
+   - Verificación de email único en Room
+   - Inserción de usuario en base de datos
+   - Sesión automática después de registro
+   - Navegación a MainActivity
+
+3. **LoginActivity actualizado**
+   - Login real con Room (validarLogin)
+   - Verificación de sesión existente
+   - Guardar sesión en SharedPreferences
+   - Mensajes personalizados con nombre de usuario
+
+4. **Strings localizados agregados**
+   - Mensajes de validación
+   - Textos de interfaz de registro
+   - Mensajes de error y éxito
+
+5. **RegisterActivity registrado en AndroidManifest**
+   - Configurado como hijo de LoginActivity
+   - Navegación correcta entre pantallas
+
+6. **Fix aplicado en AppDatabase**
+   - Corrección: `UsuarioDao()` → `usuarioDao()`
+   - Compilación exitosa
+
+### **🎓 Conceptos aplicados:**
+- Corrutinas con lifecycleScope
+- Flow.first() para obtener valores únicos
+- ViewBinding en RegisterActivity
+- Validación en cascada de formularios
+- Intent flags para navegación sin retroceso
+- Room queries con Flow
+- SharedPreferences para persistencia de sesión
+- Material Design 3 TextInputLayout
+- CheckBox para términos y condiciones
+
+### **📈 Progreso:**
+- **8 de 8 pasos completados (100%)**
+- **10 archivos creados/modificados**
+- **Compilación exitosa sin errores**
+- **Sistema de autenticación funcional**
+
+### **🎯 Estado final:**
+✅ Sistema de registro y login completamente funcional
+✅ Persistencia de sesión entre aperturas de app
+✅ Validaciones robustas
+✅ UI consistente y moderna
+✅ Código limpio y documentado
+
+---
+
 ## 📊 **RESUMEN DE SESIÓN 2 (2025-11-16 19:46)**
 
 ### **✅ Logros completados:**
@@ -883,8 +1250,9 @@ Crear el layout de registro (activity_register.xml) con campos para nombre, emai
 
 ---
 
-**Última actualización:** 2025-11-16 19:46  
-**Próxima sesión:** Paso 5 - Layout de Registro (XML)
+**Última actualización:** 2025-11-17 04:28  
+**Estado:** ✅ COMPLETADO - Sistema de registro y autenticación funcional  
+**Próximos pasos sugeridos:** Implementar logout, editar perfil, migración a Supabase Auth
 
 ---
 

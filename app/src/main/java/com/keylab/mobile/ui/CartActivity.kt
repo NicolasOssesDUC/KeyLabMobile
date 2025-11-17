@@ -1,5 +1,6 @@
 package com.keylab.mobile.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -7,24 +8,33 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.keylab.mobile.R
 import com.keylab.mobile.data.local.AppDatabase
+import com.keylab.mobile.data.local.PreferencesManager
 import com.keylab.mobile.data.repository.CarritoRepository
 import com.keylab.mobile.databinding.ActivityCartBinding
+import com.keylab.mobile.domain.model.Orden
+import com.keylab.mobile.domain.model.OrdenItem
 import com.keylab.mobile.ui.adapter.CartAdapter
 import com.keylab.mobile.ui.viewmodel.CarritoViewModel
 import com.keylab.mobile.ui.viewmodel.CarritoViewModelFactory
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class CartActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCartBinding
     private lateinit var adapter: CartAdapter
+    private lateinit var database: AppDatabase
+    private lateinit var preferencesManager: PreferencesManager
     
     private val viewModel: CarritoViewModel by viewModels {
-        val database = AppDatabase.getDatabase(applicationContext)
-        val repository = CarritoRepository(database.carritoDao())
+        val db = AppDatabase.getDatabase(applicationContext)
+        val repository = CarritoRepository(db.carritoDao())
         CarritoViewModelFactory(repository)
     }
 
@@ -32,6 +42,9 @@ class CartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        database = AppDatabase.getDatabase(this)
+        preferencesManager = PreferencesManager(this)
 
         setupToolbar()
         setupRecyclerView()
@@ -104,8 +117,96 @@ class CartActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         binding.btnCheckout.setOnClickListener {
-            Toast.makeText(this, "Proceder al pago - TODO", Toast.LENGTH_SHORT).show()
+            procesarCompra()
         }
+    }
+
+    private fun procesarCompra() {
+        lifecycleScope.launch {
+            try {
+                // Verificar que el usuario esté logueado
+                val usuarioId = preferencesManager.obtenerUserId()
+                if (usuarioId == -1) {
+                    Toast.makeText(
+                        this@CartActivity,
+                        "Debes iniciar sesión para realizar la compra",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@launch
+                }
+
+                // Obtener items del carrito
+                val items = viewModel.items.first()
+                if (items.isEmpty()) {
+                    Toast.makeText(
+                        this@CartActivity,
+                        getString(R.string.order_empty_cart),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@launch
+                }
+
+                // Obtener totales
+                val subtotal = viewModel.subtotal.first()
+                val costoEnvio = viewModel.costoEnvio.first()
+                val total = viewModel.total.first()
+
+                // Generar número de orden único
+                val numeroOrden = generarNumeroOrden()
+
+                // Crear orden
+                val orden = Orden(
+                    usuarioId = usuarioId,
+                    numeroOrden = numeroOrden,
+                    subtotal = subtotal,
+                    costoEnvio = costoEnvio,
+                    total = total
+                )
+
+                // Insertar orden en la base de datos
+                val ordenId = database.ordenDao().insertarOrden(orden)
+
+                // Crear items de la orden
+                val ordenItems = items.map { carritoItem ->
+                    OrdenItem(
+                        ordenId = ordenId.toInt(),
+                        productoNombre = carritoItem.nombre,
+                        cantidad = carritoItem.cantidad,
+                        precioUnitario = carritoItem.precio,
+                        subtotal = carritoItem.precio * carritoItem.cantidad
+                    )
+                }
+
+                // Insertar items de la orden
+                database.ordenDao().insertarOrdenItems(ordenItems)
+
+                // Limpiar carrito
+                items.forEach { carritoItem ->
+                    viewModel.eliminarItem(carritoItem.productoId)
+                }
+
+                // Navegar a la boleta
+                val intent = Intent(this@CartActivity, OrderReceiptActivity::class.java)
+                intent.putExtra(OrderReceiptActivity.EXTRA_ORDER_ID, ordenId.toInt())
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(
+                    this@CartActivity,
+                    getString(R.string.order_processing_error),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun generarNumeroOrden(): String {
+        val fecha = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+        val random = (1..999).random().toString().padStart(3, '0')
+        return "#ORD-$fecha-$random"
     }
 
     private fun formatPrice(price: Double): String {

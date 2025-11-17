@@ -6,19 +6,36 @@ import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.keylab.mobile.R
+import com.keylab.mobile.data.local.AppDatabase
+import com.keylab.mobile.data.local.PreferencesManager
 import com.keylab.mobile.databinding.ActivityLoginBinding
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var database: AppDatabase
+    private lateinit var preferencesManager: PreferencesManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        database = AppDatabase.getDatabase(this)
+        preferencesManager = PreferencesManager(this)
+
+        checkExistingSession()
         setupListeners()
+    }
+
+    private fun checkExistingSession() {
+        if (preferencesManager.isLoggedIn()) {
+            navigateToMain()
+        }
     }
 
     private fun setupListeners() {
@@ -31,7 +48,8 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.tvRegister.setOnClickListener {
-            Toast.makeText(this, "Registro próximamente", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
         }
         
         binding.googleLoginButton.setOnClickListener {
@@ -53,18 +71,18 @@ class LoginActivity : AppCompatActivity() {
         var isValid = true
 
         if (email.isEmpty()) {
-            binding.emailInputLayout.error = "El correo electrónico es requerido"
+            binding.emailInputLayout.error = getString(R.string.error_empty_email)
             isValid = false
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.emailInputLayout.error = "Correo electrónico inválido"
+            binding.emailInputLayout.error = getString(R.string.error_invalid_email)
             isValid = false
         }
 
         if (password.isEmpty()) {
-            binding.passwordInputLayout.error = "La contraseña es requerida"
+            binding.passwordInputLayout.error = getString(R.string.error_empty_password)
             isValid = false
         } else if (password.length < 6) {
-            binding.passwordInputLayout.error = "Mínimo 6 caracteres"
+            binding.passwordInputLayout.error = getString(R.string.error_password_too_short)
             isValid = false
         }
 
@@ -77,14 +95,46 @@ class LoginActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         binding.loginButton.isEnabled = false
 
-        binding.root.postDelayed({
-            binding.progressBar.visibility = View.GONE
-            binding.loginButton.isEnabled = true
+        lifecycleScope.launch {
+            try {
+                val usuario = database.usuarioDao().validarLogin(email, password).first()
 
-            Toast.makeText(this, "¡Bienvenido a KeyLab!", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }, 1500)
+                binding.progressBar.visibility = View.GONE
+                binding.loginButton.isEnabled = true
+
+                if (usuario != null) {
+                    preferencesManager.guardarSesion(usuario.id)
+                    
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "¡Bienvenido ${usuario.nombre}!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    
+                    navigateToMain()
+                } else {
+                    Toast.makeText(
+                        this@LoginActivity,
+                        getString(R.string.error_login_failed),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } catch (e: Exception) {
+                binding.progressBar.visibility = View.GONE
+                binding.loginButton.isEnabled = true
+                Toast.makeText(
+                    this@LoginActivity,
+                    getString(R.string.error_login_general),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun navigateToMain() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 }

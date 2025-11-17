@@ -89,4 +89,46 @@
     <string name="product_stock_available">Stock disponible: %d unidades</string>
     <string name="product_out_of_stock">Sin Stock</string>
     <string name="product_no_description">Sin descripción disponible</string>
+    
+    <!-- Register Activity -->
+    <string name="register_title">Crear Cuenta</string>
+    <string name="register_subtitle">Únete a KeyLab hoy</string>
+    <string name="register_name_hint">Nombre completo</string>
+    <string name="register_email_hint">Correo electrónico</string>
+    <string name="register_password_hint">Contraseña</string>
+    <string name="register_confirm_password_hint">Confirmar contraseña</string>
+    <string name="register_terms_accept">Acepto los términos y condiciones</string>
+    <string name="register_button">Crear cuenta</string>
+    <string name="register_have_account_login">¿Ya tienes cuenta? Inicia sesión</string>
+    
+    <!-- Validation Messages -->
+    <string name="error_empty_name">El nombre es requerido</string>
+    <string name="error_empty_email">El correo es requerido</string>
+    <string name="error_invalid_email">Correo inválido</string>
+    <string name="error_empty_password">La contraseña es requerida</string>
+    <string name="error_password_too_short">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="error_passwords_dont_match">Las contraseñas no coinciden</string>
+    <string name="error_terms_not_accepted">Debes aceptar los términos y condiciones</string>
+    <string name="error_email_already_exists">Este correo ya está registrado</string>
+    <string name="error_registration_failed">Error al crear la cuenta</string>
+    <string name="success_account_created">¡Cuenta creada exitosamente!</string>
+    <string name="error_login_failed">Correo o contraseña incorrectos</string>
+    <string name="error_login_general">Error al iniciar sesión</string>
+    
+    <!-- Order Receipt -->
+    <string name="order_success_title">¡Compra Exitosa!</string>
+    <string name="order_success_subtitle">Tu pedido ha sido procesado correctamente</string>
+    <string name="order_number_label">Número de Orden</string>
+    <string name="order_date_label">Fecha</string>
+    <string name="order_customer_label">Cliente</string>
+    <string name="order_email_label">Email</string>
+    <string name="order_products_label">Productos</string>
+    <string name="order_summary_label">Resumen de Pago</string>
+    <string name="order_subtotal_label">Subtotal</string>
+    <string name="order_shipping_label">Envío</string>
+    <string name="order_total_label">Total</string>
+    <string name="order_back_to_home">Volver al Inicio</string>
+    <string name="order_view_all_orders">Ver Mis Pedidos</string>
+    <string name="order_processing_error">Error al procesar la orden</string>
+    <string name="order_empty_cart">El carrito está vacío</string>
 </resources>
