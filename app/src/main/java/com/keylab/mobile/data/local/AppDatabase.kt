@@ -16,7 +16,7 @@ import com.keylab.mobile.domain.model.OrdenItem
  */
 @Database(
     entities = [Producto::class, CarritoItem::class, Usuario::class, Orden::class, OrdenItem::class],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

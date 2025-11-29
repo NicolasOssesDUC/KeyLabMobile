@@ -73,7 +73,6 @@ class OrderReceiptActivity : AppCompatActivity() {
             try {
                 val orden = database.ordenDao().obtenerOrdenPorId(ordenId)
                 val items = database.ordenDao().obtenerItemsPorOrden(ordenId)
-                val usuario = database.usuarioDao().obtenerPorId(orden?.usuarioId ?: -1)
 
                 orden?.let {
                     binding.tvOrderNumber.text = it.numeroOrden
@@ -85,17 +84,13 @@ class OrderReceiptActivity : AppCompatActivity() {
                         "GRATIS"
                     }
                     binding.tvTotal.text = formatPrice(it.total)
+                    
+                    // Mostrar datos del usuario desde la orden
+                    binding.tvCustomerName.text = it.usuarioNombre ?: "Usuario"
+                    binding.tvCustomerEmail.text = it.usuarioEmail ?: ""
                 }
 
-                // Obtener datos del usuario usando Flow
-                lifecycleScope.launch {
-                    usuario.collect { user ->
-                        user?.let {
-                            binding.tvCustomerName.text = it.nombre
-                            binding.tvCustomerEmail.text = it.email
-                        }
-                    }
-                }
+                adapter.submitList(items)
 
                 adapter.submitList(items)
             } catch (e: Exception) {

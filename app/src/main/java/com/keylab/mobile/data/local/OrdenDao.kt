@@ -18,7 +18,7 @@ interface OrdenDao {
     suspend fun insertarOrdenItems(items: List<OrdenItem>)
     
     @Query("SELECT * FROM ordenes WHERE usuario_id = :usuarioId ORDER BY fecha_orden DESC")
-    fun obtenerOrdenesPorUsuario(usuarioId: Int): Flow<List<Orden>>
+    fun obtenerOrdenesPorUsuario(usuarioId: String): Flow<List<Orden>>
     
     @Query("SELECT * FROM ordenes WHERE id = :ordenId LIMIT 1")
     suspend fun obtenerOrdenPorId(ordenId: Int): Orden?
@@ -27,5 +27,5 @@ interface OrdenDao {
     suspend fun obtenerItemsPorOrden(ordenId: Int): List<OrdenItem>
     
     @Query("SELECT COUNT(*) FROM ordenes WHERE usuario_id = :usuarioId")
-    fun contarOrdenesPorUsuario(usuarioId: Int): Flow<Int>
+    fun contarOrdenesPorUsuario(usuarioId: String): Flow<Int>
 }

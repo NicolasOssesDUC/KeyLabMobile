@@ -13,20 +13,34 @@ class PreferencesManager(context: Context) {
         private const val PREFS_NAME = "KeyLab_preferences"
         private const val KEY_USER_ID = "user_id"
         private const val KEY_IS_LOGGED_IN = "is_logged_in"
+        private const val KEY_ACCESS_TOKEN = "access_token"
+        private const val KEY_REFRESH_TOKEN = "refresh_token"
+        private const val KEY_USER_EMAIL = "user_email"
     }
 
     //instancia
 
-    fun guardarSesion(userId: Int) {
+    fun guardarSesion(userId: String, email: String?, accessToken: String, refreshToken: String) {
         sharedPreferences.edit().apply {
-            putInt(KEY_USER_ID, userId)
+            putString(KEY_USER_ID, userId)
+            putString(KEY_USER_EMAIL, email)
+            putString(KEY_ACCESS_TOKEN, accessToken)
+            putString(KEY_REFRESH_TOKEN, refreshToken)
             putBoolean(KEY_IS_LOGGED_IN, true)
             apply()
         }
     }
 
-    fun obtenerUserId(): Int {
-        return sharedPreferences.getInt(KEY_USER_ID, -1)
+    fun obtenerUserId(): String? {
+        return sharedPreferences.getString(KEY_USER_ID, null)
+    }
+
+    fun obtenerUserEmail(): String? {
+        return sharedPreferences.getString(KEY_USER_EMAIL, null)
+    }
+
+    fun obtenerAccessToken(): String? {
+        return sharedPreferences.getString(KEY_ACCESS_TOKEN, null)
     }
 
     fun isLoggedIn(): Boolean {
@@ -35,8 +49,7 @@ class PreferencesManager(context: Context) {
 
     fun cerrarSesion() {
         sharedPreferences.edit().apply {
-            remove(KEY_USER_ID)
-            putBoolean(KEY_IS_LOGGED_IN, false)
+            clear()
             apply()
         }
     }

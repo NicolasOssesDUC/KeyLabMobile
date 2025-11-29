@@ -126,7 +126,7 @@ class CartActivity : AppCompatActivity() {
             try {
                 // Verificar que el usuario esté logueado
                 val usuarioId = preferencesManager.obtenerUserId()
-                if (usuarioId == -1) {
+                if (usuarioId == null) {
                     Toast.makeText(
                         this@CartActivity,
                         "Debes iniciar sesión para realizar la compra",
@@ -134,7 +134,10 @@ class CartActivity : AppCompatActivity() {
                     ).show()
                     return@launch
                 }
-
+                
+                // Obtener detalles del usuario (email, nombre si disponible)
+                val usuarioEmail = preferencesManager.obtenerUserEmail() ?: "usuario@keylab.com"
+                
                 // Obtener items del carrito
                 val items = viewModel.items.first()
                 if (items.isEmpty()) {
@@ -157,6 +160,8 @@ class CartActivity : AppCompatActivity() {
                 // Crear orden
                 val orden = Orden(
                     usuarioId = usuarioId,
+                    usuarioEmail = usuarioEmail,
+                    usuarioNombre = "Usuario", // Placeholder
                     numeroOrden = numeroOrden,
                     subtotal = subtotal,
                     costoEnvio = costoEnvio,
