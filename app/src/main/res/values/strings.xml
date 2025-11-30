@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KeyLab</string>
+    <string name="placeholder_home_title">KeyLabMobile listo para wireframes</string>
+    <string name="desc_logo_keylab">Logo de KeyLab</string>
+    <string name="desc_cart">Ver carrito de compras</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">Inicio</string>
+    <string name="nav_products">Productos</string>
+    <string name="nav_about">Nosotros</string>
+    <string name="nav_contact">Contacto</string>
+    
+    <!-- Hero Section -->
+    <string name="hero_title">Bienvenido a KeyLab</string>
+    <string name="hero_subtitle">Todo para tu próximo teclado</string>
+    <string name="section_new_arrivals">Productos recién llegados</string>
+    
+    <!-- Product Examples -->
+    <string name="desc_product_image">Imagen de teclado disponible</string>
+    <string name="sample_keyboard_one">Teclado Redragon Pro</string>
+    <string name="sample_keyboard_two">Ducky One 2 Mini</string>
+    <string name="sample_keyboard_three">Akko MOD Series</string>
+    
+    <!-- Product Item -->
+    <string name="imagen_producto">Imagen del producto</string>
+    <string name="ver_detalle">Ver Detalle</string>
+    <string name="sin_stock">Sin Stock</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="agregar_al_carrito">+</string>
+    
+    <!-- MainActivity / Explore -->
+    <string name="explore_title">Explore</string>
+    <string name="search_hint">Search products…</string>
+    <string name="cart">Cart</string>
+    <string name="promo_title">50% off your first order</string>
+    <string name="promo_button">Buy Now</string>
+    <string name="categories_title">Categorías</string>
+    <string name="view_all">Ver todo</string>
+    <string name="category_switches">Switches</string>
+    <string name="category_cases">Cases</string>
+    <string name="category_keycaps">KeyCaps</string>
+    <string name="category_keyboards">Teclados</string>
+    <string name="featured_products">Featured Products</string>
+    <string name="add_to_favorites">Add to favorites</string>
+    <string name="rating">Rating</string>
+    
+    <!-- Bottom Navigation -->
+    <string name="nav_explore">Explore</string>
+    <string name="nav_shop">Shop</string>
+    <string name="nav_favorites">Favorites</string>
+    <string name="nav_profile">Profile</string>
+    
+    <!-- Login Activity (Opal-style Modern) -->
+    <string name="login_welcome">Bienvenido</string>
+    <string name="login_subtitle">¡Inicia sesión para una mejor experiencia!</string>
+    <string name="login_email_input">Correo electrónico</string>
+    <string name="login_password_input">Contraseña</string>
+    <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login_sign_in">Iniciar sesión</string>
+    <string name="login_or">o</string>
+    <string name="login_sign_in_google">Iniciar sesión con Google</string>
+    <string name="login_sign_in_phone">Iniciar con teléfono</string>
+    <string name="login_no_account_register">¿No tienes cuenta? Regístrate</string>
+    
+    <!-- Camera Activity -->
+    <string name="camera_instruction">Enmarca el producto en el cuadro</string>
+    <string name="camera_capture">Capturar foto</string>
+    <string name="camera_cancel">Cancelar</string>
+    <string name="camera_flip">Voltear</string>
+    
+    <!-- Photo Options -->
+    <string name="photo_options_title">Cambiar foto de perfil</string>
+    <string name="photo_camera">Tomar foto</string>
+    <string name="photo_gallery">Elegir de galería</string>
+    
+    <!-- Empty States -->
+    <string name="empty_products">No hay productos disponibles</string>
+    <string name="pull_to_refresh">Desliza para actualizar</string>
+    <string name="no_products">No hay productos</string>
+    <string name="add_product">Agregar producto</string>
+    
+    <!-- Product Detail -->
+    <string name="product_detail_title">Detalle del Producto</string>
+    <string name="product_description">Descripción</string>
+    <string name="product_quantity">Cantidad</string>
+    <string name="product_total">Total:</string>
+    <string name="product_add_to_cart">Agregar al Carrito</string>
+    <string name="product_stock_available">Stock disponible: %d unidades</string>
+    <string name="product_out_of_stock">Sin Stock</string>
+    <string name="product_no_description">Sin descripción disponible</string>
+    
+    <!-- Register Activity -->
+    <string name="register_title">Crear Cuenta</string>
+    <string name="register_subtitle">Únete a KeyLab hoy</string>
+    <string name="register_name_hint">Nombre completo</string>
+    <string name="register_email_hint">Correo electrónico</string>
+    <string name="register_password_hint">Contraseña</string>
+    <string name="register_confirm_password_hint">Confirmar contraseña</string>
+    <string name="register_terms_accept">Acepto los términos y condiciones</string>
+    <string name="register_button">Crear cuenta</string>
+    <string name="register_have_account_login">¿Ya tienes cuenta? Inicia sesión</string>
+    
+    <!-- Validation Messages -->
+    <string name="error_empty_name">El nombre es requerido</string>
+    <string name="error_empty_email">El correo es requerido</string>
+    <string name="error_invalid_email">Correo inválido</string>
+    <string name="error_empty_password">La contraseña es requerida</string>
+    <string name="error_password_too_short">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="error_passwords_dont_match">Las contraseñas no coinciden</string>
+    <string name="error_terms_not_accepted">Debes aceptar los términos y condiciones</string>
+    <string name="error_email_already_exists">Este correo ya está registrado</string>
+    <string name="error_registration_failed">Error al crear la cuenta</string>
+    <string name="success_account_created">¡Cuenta creada exitosamente!</string>
+    <string name="error_login_failed">Correo o contraseña incorrectos</string>
+    <string name="error_login_general">Error al iniciar sesión</string>
+    
+    <!-- Order Receipt -->
+    <string name="order_success_title">¡Compra Exitosa!</string>
+    <string name="order_success_subtitle">Tu pedido ha sido procesado correctamente</string>
+    <string name="order_number_label">Número de Orden</string>
+    <string name="order_date_label">Fecha</string>
+    <string name="order_customer_label">Cliente</string>
+    <string name="order_email_label">Email</string>
+    <string name="order_products_label">Productos</string>
+    <string name="order_summary_label">Resumen de Pago</string>
+    <string name="order_subtotal_label">Subtotal</string>
+    <string name="order_shipping_label">Envío</string>
+    <string name="order_total_label">Total</string>
+    <string name="order_back_to_home">Volver al Inicio</string>
+    <string name="order_view_all_orders">Ver Mis Pedidos</string>
+    <string name="order_processing_error">Error al procesar la orden</string>
+    <string name="order_empty_cart">El carrito está vacío</string>
+</resources>

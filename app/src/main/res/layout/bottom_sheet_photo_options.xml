@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/dark_surface"
+    android:padding="@dimen/spacing_lg">
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/photo_options_title"
+        android:textSize="@dimen/text_lg"
+        android:textStyle="bold"
+        android:textColor="@color/dark_text_primary"
+        android:layout_marginBottom="@dimen/spacing_md" />
+
+    <!-- Camera Option -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardCamera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_sm"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardBackgroundColor="@color/dark_input_background"
+        app:cardCornerRadius="@dimen/card_radius"
+        app:cardElevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/spacing_md"
+            android:gravity="center_vertical">
+
+            <!-- Camera Icon -->
+            <ImageView
+                android:layout_width="@dimen/icon_md"
+                android:layout_height="@dimen/icon_md"
+                android:src="@android:drawable/ic_menu_camera"
+                android:contentDescription="@string/photo_camera"
+                app:tint="@color/keylab_primary" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/spacing_md"
+                android:text="@string/photo_camera"
+                android:textSize="@dimen/text_md"
+                android:textColor="@color/dark_text_primary" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Gallery Option -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardGallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_sm"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardBackgroundColor="@color/dark_input_background"
+        app:cardCornerRadius="@dimen/card_radius"
+        app:cardElevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/spacing_md"
+            android:gravity="center_vertical">
+
+            <!-- Gallery Icon -->
+            <ImageView
+                android:layout_width="@dimen/icon_md"
+                android:layout_height="@dimen/icon_md"
+                android:src="@android:drawable/ic_menu_gallery"
+                android:contentDescription="@string/photo_gallery"
+                app:tint="@color/keylab_primary" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/spacing_md"
+                android:text="@string/photo_gallery"
+                android:textSize="@dimen/text_md"
+                android:textColor="@color/dark_text_primary" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_sm"
+        android:text="@string/camera_cancel"
+        android:textColor="@color/dark_text_secondary"
+        style="@style/Widget.Material3.Button.TextButton" />
+
+</LinearLayout>

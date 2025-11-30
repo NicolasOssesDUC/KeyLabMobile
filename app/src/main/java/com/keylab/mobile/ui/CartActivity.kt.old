@@ -1,0 +1,90 @@
+package com.keylab.mobile.ui
+
+import android.os.Bundle
+import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.keylab.mobile.databinding.ActivityCartBinding
+import com.keylab.mobile.domain.model.Producto
+import com.keylab.mobile.ui.adapter.CartAdapter
+
+class CartActivity : AppCompatActivity() {
+    
+    private lateinit var binding: ActivityCartBinding
+    private lateinit var adapter: CartAdapter
+    
+    // TODO: Implementar CartManager/Repository para persistir carrito
+    private val cartItems = mutableListOf<Producto>()
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityCartBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        
+        setupToolbar()
+        setupRecyclerView()
+        setupListeners()
+        updateUI()
+    }
+    
+    private fun setupToolbar() {
+        binding.toolbar.setNavigationOnClickListener {
+            finish()
+        }
+    }
+    
+    private fun setupRecyclerView() {
+        adapter = CartAdapter(
+            onQuantityChanged = { producto, quantity ->
+                // TODO: Actualizar cantidad en CartManager
+                Toast.makeText(this, "Cantidad: $quantity", Toast.LENGTH_SHORT).show()
+                updateTotals()
+            },
+            onRemoveClick = { producto ->
+                cartItems.remove(producto)
+                adapter.submitList(cartItems.toList())
+                updateUI()
+            }
+        )
+        
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(this@CartActivity)
+            adapter = this@CartActivity.adapter
+        }
+    }
+    
+    private fun setupListeners() {
+        binding.btnCheckout.setOnClickListener {
+            if (cartItems.isEmpty()) {
+                Toast.makeText(this, "El carrito está vacío", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Proceder al pago - TODO", Toast.LENGTH_SHORT).show()
+                // TODO: Navegar a checkout
+            }
+        }
+    }
+    
+    private fun updateUI() {
+        if (cartItems.isEmpty()) {
+            binding.emptyStateLayout.visibility = View.VISIBLE
+            binding.contentLayout.visibility = View.GONE
+        } else {
+            binding.emptyStateLayout.visibility = View.GONE
+            binding.contentLayout.visibility = View.VISIBLE
+            adapter.submitList(cartItems.toList())
+            updateTotals()
+        }
+    }
+    
+    private fun updateTotals() {
+        // TODO: Calcular con cantidades reales
+        val subtotal = cartItems.sumOf { it.precio }
+        val shipping = if (subtotal > 50000) 0 else 3990
+        val total = subtotal + shipping
+        
+        binding.tvSubtotal.text = "$${"$subtotal".replace(",", ".")}"
+        binding.tvShipping.text = if (shipping == 0) "Gratis" else "$${"$shipping".replace(",", ".")}"
+        binding.tvTotal.text = "$${"$total".replace(",", ".")}"
+    }
+}
