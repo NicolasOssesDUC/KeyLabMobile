@@ -69,28 +69,14 @@
     <string name="camera_cancel">Cancelar</string>
     <string name="camera_flip">Voltear</string>
     
-    <!-- Photo Options -->
-    <string name="photo_options_title">Cambiar foto de perfil</string>
-    <string name="photo_camera">Tomar foto</string>
-    <string name="photo_gallery">Elegir de galería</string>
-    
-    <!-- Empty States -->
-    <string name="empty_products">No hay productos disponibles</string>
-    <string name="pull_to_refresh">Desliza para actualizar</string>
-    <string name="no_products">No hay productos</string>
-    <string name="add_product">Agregar producto</string>
-    
-    <!-- Product Detail -->
-    <string name="product_detail_title">Detalle del Producto</string>
-    <string name="product_description">Descripción</string>
-    <string name="product_quantity">Cantidad</string>
-    <string name="product_total">Total:</string>
-    <string name="product_add_to_cart">Agregar al Carrito</string>
-    <string name="product_stock_available">Stock disponible: %d unidades</string>
-    <string name="product_out_of_stock">Sin Stock</string>
-    <string name="product_no_description">Sin descripción disponible</string>
-    
-    <!-- Register Activity -->
+    <string-array name="categorias_array">
+        <item>Teclados</item>
+        <item>Keycaps</item>
+        <item>Switches</item>
+        <item>Cases</item>
+    </string-array>
+
+    <!-- Validation & Registration -->
     <string name="register_title">Crear Cuenta</string>
     <string name="register_subtitle">Únete a KeyLab hoy</string>
     <string name="register_name_hint">Nombre completo</string>
@@ -101,7 +87,6 @@
     <string name="register_button">Crear cuenta</string>
     <string name="register_have_account_login">¿Ya tienes cuenta? Inicia sesión</string>
     
-    <!-- Validation Messages -->
     <string name="error_empty_name">El nombre es requerido</string>
     <string name="error_empty_email">El correo es requerido</string>
     <string name="error_invalid_email">Correo inválido</string>
@@ -114,21 +99,30 @@
     <string name="success_account_created">¡Cuenta creada exitosamente!</string>
     <string name="error_login_failed">Correo o contraseña incorrectos</string>
     <string name="error_login_general">Error al iniciar sesión</string>
-    
+
+    <!-- General & Empty States -->
+    <string name="empty_products">No hay productos disponibles</string>
+    <string name="pull_to_refresh">Desliza para actualizar</string>
+    <string name="no_products">No hay productos</string>
+    <string name="add_product">Agregar producto</string>
+
     <!-- Order Receipt -->
-    <string name="order_success_title">¡Compra Exitosa!</string>
-    <string name="order_success_subtitle">Tu pedido ha sido procesado correctamente</string>
+    <string name="order_success_title">¡Pedido Exitoso!</string>
+    <string name="order_success_subtitle">Gracias por tu compra</string>
     <string name="order_number_label">Número de Orden</string>
     <string name="order_date_label">Fecha</string>
     <string name="order_customer_label">Cliente</string>
     <string name="order_email_label">Email</string>
     <string name="order_products_label">Productos</string>
-    <string name="order_summary_label">Resumen de Pago</string>
+    <string name="order_summary_label">Resumen</string>
     <string name="order_subtotal_label">Subtotal</string>
     <string name="order_shipping_label">Envío</string>
     <string name="order_total_label">Total</string>
-    <string name="order_back_to_home">Volver al Inicio</string>
-    <string name="order_view_all_orders">Ver Mis Pedidos</string>
-    <string name="order_processing_error">Error al procesar la orden</string>
-    <string name="order_empty_cart">El carrito está vacío</string>
+    <string name="order_back_to_home">Volver al inicio</string>
+    <string name="order_view_all_orders">Ver mis pedidos</string>
+
+    <!-- Photo Options -->
+    <string name="photo_options_title">Cambiar Foto</string>
+    <string name="photo_camera">Cámara</string>
+    <string name="photo_gallery">Galería</string>
 </resources>

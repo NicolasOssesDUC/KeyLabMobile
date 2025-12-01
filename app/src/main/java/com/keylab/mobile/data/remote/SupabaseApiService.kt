@@ -50,7 +50,7 @@ interface SupabaseApiService {
     @Headers("Prefer: return=representation")
     @POST("productos")
     suspend fun crearProducto(
-        @Body producto: Producto
+        @Body producto: Any // Aceptamos Map o Producto
     ): Response<List<Producto>>
     
     // ═══ PATCH - Actualizar ═══

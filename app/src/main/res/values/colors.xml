@@ -1,80 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Primary Brand Colors (KeyLab) -->
-    <color name="keylab_primary">#007BFF</color>
-    <color name="keylab_primary_dark">#0056B3</color>
-    <color name="keylab_primary_light">#E7F1FF</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
     
-    <!-- Material3 Theme Colors -->
-    <color name="md_theme_primary">#007BFF</color>
-    <color name="md_theme_onPrimary">#FFFFFF</color>
-    <color name="md_theme_primaryContainer">#DEE7FF</color>
-    <color name="md_theme_onPrimaryContainer">#001B3D</color>
+    <!-- KeyLab Core Colors -->
+    <color name="keylab_primary">#BB86FC</color>
+    <color name="keylab_primary_light">#E1BEE7</color>
+    <color name="login_button_primary">#BB86FC</color>
+    <color name="ic_launcher_background">#121212</color>
     
-    <color name="md_theme_secondary">#535E71</color>
-    <color name="md_theme_onSecondary">#FFFFFF</color>
-    <color name="md_theme_secondaryContainer">#D7E2F8</color>
-    <color name="md_theme_onSecondaryContainer">#101C2B</color>
-    
-    <color name="md_theme_background">#FAFBFE</color>
-    <color name="md_theme_onBackground">#1A1C1E</color>
-    <color name="md_theme_surface">#FFFFFF</color>
-    <color name="md_theme_onSurface">#1A1C1E</color>
-    <color name="md_theme_surfaceVariant">#DFE2EB</color>
-    <color name="md_theme_onSurfaceVariant">#43474E</color>
-    
-    <color name="md_theme_error">#BA1A1A</color>
-    <color name="md_theme_onError">#FFFFFF</color>
-    <color name="md_theme_errorContainer">#FFDAD6</color>
-    <color name="md_theme_onErrorContainer">#410002</color>
-    
-    <color name="md_theme_outline">#73777F</color>
-    <color name="md_theme_outlineVariant">#C3C6CF</color>
-    
-    <!-- Surface Colors -->
-    <color name="surface">#FFFFFF</color>
-    <color name="surface_variant">#F8F9FA</color>
-    <color name="surface_tint">#EBF2FF</color>
-    
-    <!-- Text Colors -->
-    <color name="text_primary">#1F1F1F</color>
-    <color name="text_secondary">#5A5A5A</color>
-    <color name="text_tertiary">#8E8E8E</color>
-    <color name="text_disabled">#BDBDBD</color>
-    
-    <!-- State Colors -->
-    <color name="success">#28A745</color>
-    <color name="warning">#FFC107</color>
-    <color name="error">#DC3545</color>
-    <color name="info">#17A2B8</color>
-    
-    <!-- Product States -->
-    <color name="stock_available">#28A745</color>
-    <color name="stock_low">#FFC107</color>
-    <color name="stock_out">#DC3545</color>
-    
-    <!-- Divider & Border -->
-    <color name="divider">#E0E0E0</color>
-    <color name="border_light">#EEEEEE</color>
-    
-    <!-- Dark Theme Colors (Login Opal-style) -->
+    <!-- KeyLab Dark Theme Colors -->
     <color name="dark_background">#121212</color>
     <color name="dark_surface">#1E1E1E</color>
-    <color name="dark_surface_variant">#2C2C2C</color>
+    <color name="dark_primary">#BB86FC</color>
+    <color name="dark_secondary">#03DAC6</color>
     <color name="dark_text_primary">#FFFFFF</color>
     <color name="dark_text_secondary">#B0B0B0</color>
     <color name="dark_text_tertiary">#808080</color>
-    <color name="dark_button_primary">#FFFFFF</color>
-    <color name="dark_button_text">#000000</color>
     <color name="dark_input_background">#2C2C2C</color>
-    <color name="dark_input_stroke">#404040</color>
-    <color name="dark_divider">#404040</color>
+    <color name="dark_input_stroke">#484848</color>
+    <color name="dark_button_primary">#BB86FC</color>
+    <color name="dark_button_text">#000000</color>
+    <color name="dark_divider">#2C2C2C</color>
     
-    <!-- Legacy (mantener compatibilidad) -->
-    <color name="ic_launcher_background">#007BFF</color>
-    <color name="login_background">#FFFFFF</color>
-    <color name="login_card_background">#F5F5F5</color>
-    <color name="login_button_primary">#007BFF</color>
-    <color name="login_link_accent">#007BFF</color>
-    <color name="login_error">#D32F2F</color>
+    <!-- Legacy/Common Colors (restored for compatibility) -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B0B0B0</color>
+    <color name="text_tertiary">#808080</color>
+    <color name="border_light">#484848</color>
+    <color name="divider">#2C2C2C</color>
+    <color name="surface">#1E1E1E</color>
+    <color name="surface_tint">#2C2C2C</color>
+    
+    <!-- Status Colors -->
+    <color name="stock_available">#4CAF50</color>
+    <color name="stock_out">#CF6679</color>
+    <color name="error_color">#CF6679</color>
+    <color name="error">#CF6679</color>
+    <color name="success_color">#4CAF50</color>
+    <color name="warning">#FFA000</color>
+
+    <!-- Material Design 3 Theme Colors (Dark) -->
+    <color name="md_theme_primary">#BB86FC</color>
+    <color name="md_theme_onPrimary">#000000</color>
+    <color name="md_theme_primaryContainer">#3700B3</color>
+    <color name="md_theme_onPrimaryContainer">#FFFFFF</color>
+    <color name="md_theme_secondary">#03DAC6</color>
+    <color name="md_theme_onSecondary">#000000</color>
+    <color name="md_theme_secondaryContainer">#004E4C</color>
+    <color name="md_theme_onSecondaryContainer">#FFFFFF</color>
+    <color name="md_theme_error">#CF6679</color>
+    <color name="md_theme_onError">#000000</color>
+    <color name="md_theme_errorContainer">#B00020</color>
+    <color name="md_theme_onErrorContainer">#FFFFFF</color>
+    <color name="md_theme_background">#121212</color>
+    <color name="md_theme_onBackground">#FFFFFF</color>
+    <color name="md_theme_surface">#1E1E1E</color>
+    <color name="md_theme_onSurface">#FFFFFF</color>
+    <color name="md_theme_surfaceVariant">#2C2C2C</color>
+    <color name="md_theme_onSurfaceVariant">#B0B0B0</color>
+    <color name="md_theme_outline">#938F99</color>
+    <color name="md_theme_outlineVariant">#484848</color>
 </resources>

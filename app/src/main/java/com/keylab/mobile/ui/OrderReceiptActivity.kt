@@ -5,11 +5,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.keylab.mobile.R
 import com.keylab.mobile.data.local.AppDatabase
+import com.keylab.mobile.data.repository.OrdenRepository
 import com.keylab.mobile.databinding.ActivityOrderReceiptBinding
-import com.keylab.mobile.domain.model.OrdenItem
 import com.keylab.mobile.ui.adapter.OrderProductsAdapter
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -19,6 +19,7 @@ import java.util.Locale
 class OrderReceiptActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityOrderReceiptBinding
+    private lateinit var repository: OrdenRepository
     private lateinit var database: AppDatabase
     private lateinit var adapter: OrderProductsAdapter
 
@@ -31,7 +32,9 @@ class OrderReceiptActivity : AppCompatActivity() {
         binding = ActivityOrderReceiptBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Inicializar Repositorio (Idealmente usar DI/ViewModel)
         database = AppDatabase.getDatabase(this)
+        repository = OrdenRepository(database.ordenDao())
 
         setupRecyclerView()
         setupListeners()
@@ -48,18 +51,20 @@ class OrderReceiptActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         binding.btnBackToHome.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-            finish()
+            navigateToHome()
         }
 
         binding.btnViewOrders.setOnClickListener {
-            // TODO: Implementar pantalla de historial de órdenes
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+            // TODO: Implementar navegación directa al historial de órdenes cuando exista
+            navigateToHome()
         }
+    }
+    
+    private fun navigateToHome() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        startActivity(intent)
+        finish()
     }
 
     private fun loadOrderData() {
@@ -71,8 +76,12 @@ class OrderReceiptActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                val orden = database.ordenDao().obtenerOrdenPorId(ordenId)
-                val items = database.ordenDao().obtenerItemsPorOrden(ordenId)
+                val orden = repository.obtenerOrdenPorId(ordenId)
+                val items = repository.obtenerItemsPorOrden(ordenId)
+                
+                // Para el usuario seguimos usando el DAO directo por ahora o Repository si existiera
+                // Asumimos que existe un usuarioId válido
+                 val usuarioFlow = database.usuarioDao().obtenerPorId(orden?.usuarioId ?: -1)
 
                 orden?.let {
                     binding.tvOrderNumber.text = it.numeroOrden
@@ -84,18 +93,18 @@ class OrderReceiptActivity : AppCompatActivity() {
                         "GRATIS"
                     }
                     binding.tvTotal.text = formatPrice(it.total)
-                    
-                    // Mostrar datos del usuario desde la orden
-                    binding.tvCustomerName.text = it.usuarioNombre ?: "Usuario"
-                    binding.tvCustomerEmail.text = it.usuarioEmail ?: ""
                 }
-
-                adapter.submitList(items)
+                
+                // Recolectar datos de usuario
+                usuarioFlow.firstOrNull()?.let { user ->
+                     binding.tvCustomerName.text = user.nombre
+                     binding.tvCustomerEmail.text = user.email
+                }
 
                 adapter.submitList(items)
             } catch (e: Exception) {
                 e.printStackTrace()
-                finish()
+                // En caso de error, podríamos mostrar un mensaje o cerrar
             }
         }
     }
@@ -112,10 +121,6 @@ class OrderReceiptActivity : AppCompatActivity() {
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        // Evitar que vuelva al carrito
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
-        finish()
+        navigateToHome()
     }
 }

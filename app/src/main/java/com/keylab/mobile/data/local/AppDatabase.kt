@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.keylab.mobile.domain.model.CarritoItem
+import com.keylab.mobile.domain.model.Direccion
 import com.keylab.mobile.domain.model.Producto
 import com.keylab.mobile.domain.model.Usuario
 import com.keylab.mobile.domain.model.Orden
@@ -15,7 +16,7 @@ import com.keylab.mobile.domain.model.OrdenItem
  * entities: Lista de tablas (@Entity)
  */
 @Database(
-    entities = [Producto::class, CarritoItem::class, Usuario::class, Orden::class, OrdenItem::class],
+    entities = [Producto::class, CarritoItem::class, Usuario::class, Orden::class, OrdenItem::class, Direccion::class],
     version = 6,
     exportSchema = false
 )
@@ -25,6 +26,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun carritoDao(): CarritoDao
     abstract fun usuarioDao(): UsuarioDao
     abstract fun ordenDao(): OrdenDao
+    abstract fun direccionDao(): DireccionDao
     
     companion object {
         // Singleton: Solo una instancia de la BD

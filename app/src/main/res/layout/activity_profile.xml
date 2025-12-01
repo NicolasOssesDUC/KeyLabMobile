@@ -165,86 +165,6 @@
                 android:id="@+id/cardAddresses"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_sm"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardBackgroundColor="@color/dark_surface"
-                app:cardCornerRadius="@dimen/card_radius"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/dark_text_tertiary"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/spacing_md"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="📍 Direcciones"
-                        android:textSize="@dimen/text_md"
-                        android:textColor="@color/dark_text_primary" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="›"
-                        android:textSize="24sp"
-                        android:textColor="@color/dark_text_secondary" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Payments -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardPayments"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_sm"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardBackgroundColor="@color/dark_surface"
-                app:cardCornerRadius="@dimen/card_radius"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/dark_text_tertiary"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/spacing_md"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="💳 Métodos de pago"
-                        android:textSize="@dimen/text_md"
-                        android:textColor="@color/dark_text_primary" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="›"
-                        android:textSize="24sp"
-                        android:textColor="@color/dark_text_secondary" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Favorites -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardFavorites"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing_lg"
                 android:clickable="true"
                 android:focusable="true"
@@ -265,7 +185,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="❤️ Favoritos"
+                        android:text="📍 Direcciones"
                         android:textSize="@dimen/text_md"
                         android:textColor="@color/dark_text_primary" />
 

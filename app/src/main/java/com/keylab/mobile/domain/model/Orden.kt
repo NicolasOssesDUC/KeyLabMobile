@@ -13,13 +13,7 @@ data class Orden(
     val id: Int = 0,
     
     @ColumnInfo(name = "usuario_id")
-    val usuarioId: String,
-
-    @ColumnInfo(name = "usuario_email")
-    val usuarioEmail: String?,
-
-    @ColumnInfo(name = "usuario_nombre")
-    val usuarioNombre: String?,
+    val usuarioId: Int,
     
     @ColumnInfo(name = "numero_orden")
     val numeroOrden: String,

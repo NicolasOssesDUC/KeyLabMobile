@@ -86,7 +86,18 @@ class ProductoRepository(
     suspend fun crearProducto(producto: Producto): ApiResponse<Producto> = 
         withContext(Dispatchers.IO) {
             try {
-                val response = api.crearProducto(producto)
+                // Crear mapa excluyendo ID (para que Supabase lo genere)
+                val productoMap = mapOf(
+                    "nombre" to producto.nombre,
+                    "precio" to producto.precio,
+                    "categoria" to producto.categoria,
+                    "subcategoria" to producto.subcategoria,
+                    "descripcion" to producto.descripcion,
+                    "stock" to producto.stock,
+                    "imagen_url" to producto.imagenUrl
+                )
+
+                val response = api.crearProducto(productoMap)
                 
                 if (response.isSuccessful) {
                     val productoCreado = response.body()?.firstOrNull()

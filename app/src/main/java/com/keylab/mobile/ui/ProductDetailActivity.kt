@@ -9,9 +9,10 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.keylab.mobile.R
 import com.keylab.mobile.data.local.AppDatabase
-import com.keylab.mobile.data.repository.CarritoRepository
-import com.keylab.mobile.data.repository.ProductoRepository
 import com.keylab.mobile.data.remote.RetrofitClient
+import com.keylab.mobile.data.repository.CarritoRepository
+import com.keylab.mobile.data.repository.OrdenRepository
+import com.keylab.mobile.data.repository.ProductoRepository
 import com.keylab.mobile.databinding.ActivityProductDetailBinding
 import com.keylab.mobile.domain.model.Producto
 import com.keylab.mobile.ui.viewmodel.CarritoViewModel
@@ -20,6 +21,8 @@ import com.keylab.mobile.ui.viewmodel.ProductoViewModel
 import com.keylab.mobile.ui.viewmodel.ProductoViewModelFactory
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
+import java.util.Locale
 
 class ProductDetailActivity : AppCompatActivity() {
 
@@ -39,9 +42,10 @@ class ProductDetailActivity : AppCompatActivity() {
     }
     
     private val carritoViewModel: CarritoViewModel by viewModels {
-        val database = AppDatabase.getDatabase(applicationContext)
-        val repository = CarritoRepository(database.carritoDao())
-        CarritoViewModelFactory(repository)
+        val db = AppDatabase.getDatabase(applicationContext)
+        val carritoRepository = CarritoRepository(db.carritoDao())
+        val ordenRepository = OrdenRepository(db.ordenDao())
+        CarritoViewModelFactory(carritoRepository, ordenRepository)
     }
 
     private var currentProducto: Producto? = null

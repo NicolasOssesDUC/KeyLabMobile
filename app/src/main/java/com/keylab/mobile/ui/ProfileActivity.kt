@@ -13,16 +13,23 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.keylab.mobile.R
+import com.keylab.mobile.data.local.AppDatabase
+import com.keylab.mobile.data.local.PreferencesManager
 import com.keylab.mobile.databinding.ActivityProfileBinding
 import com.keylab.mobile.databinding.BottomSheetPhotoOptionsBinding
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.launch
 import java.io.File
 
 class ProfileActivity : AppCompatActivity() {
     
     private lateinit var binding: ActivityProfileBinding
+    private lateinit var preferencesManager: PreferencesManager
+    private lateinit var database: AppDatabase
     private var currentPhotoUri: Uri? = null
     private var selectedImageUri: Uri? = null
     
@@ -64,6 +71,9 @@ class ProfileActivity : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
         
+        preferencesManager = PreferencesManager(this)
+        database = AppDatabase.getDatabase(this)
+        
         setupToolbar()
         setupUserInfo()
         setupClickListeners()
@@ -76,10 +86,21 @@ class ProfileActivity : AppCompatActivity() {
     }
     
     private fun setupUserInfo() {
-        // TODO: Cargar datos reales del usuario desde SharedPreferences o Supabase Auth
-        binding.apply {
-            tvUserName.text = "Usuario KeyLab"
-            tvUserEmail.text = "usuario@keylab.com"
+        val userId = preferencesManager.obtenerUserId()
+        if (userId != -1) {
+            lifecycleScope.launch {
+                // Observar cambios en el usuario (Flow)
+                database.usuarioDao().obtenerPorId(userId).collect { usuario ->
+                    usuario?.let {
+                        binding.tvUserName.text = it.nombre
+                        binding.tvUserEmail.text = it.email
+                        // Aquí también podríamos cargar la foto si estuviera guardada en la BD/Supabase
+                    }
+                }
+            }
+        } else {
+            // Si no hay usuario válido, forzar logout
+            logout()
         }
     }
     
@@ -92,45 +113,43 @@ class ProfileActivity : AppCompatActivity() {
                 showPhotoOptionsBottomSheet()
             }
             
-            // Mis pedidos
+            // Mis pedidos (Navegación al historial de pedidos)
             cardOrders.setOnClickListener {
-                // TODO: Navegar a historial de pedidos
+                val intent = Intent(this@ProfileActivity, OrderHistoryActivity::class.java)
+                startActivity(intent)
             }
             
             // Direcciones
             cardAddresses.setOnClickListener {
-                // TODO: Navegar a gestión de direcciones
-            }
-            
-            // Métodos de pago
-            cardPayments.setOnClickListener {
-                // TODO: Navegar a métodos de pago
-            }
-            
-            // Favoritos
-            cardFavorites.setOnClickListener {
-                // TODO: Navegar a productos favoritos
+                startActivity(Intent(this@ProfileActivity, AddressListActivity::class.java))
             }
             
             // Configuración
             cardSettings.setOnClickListener {
-                // TODO: Navegar a configuración
+                Toast.makeText(this@ProfileActivity, "Configuración próximamente", Toast.LENGTH_SHORT).show()
             }
             
             // Ayuda
             cardHelp.setOnClickListener {
-                // TODO: Abrir sección de ayuda
+                Toast.makeText(this@ProfileActivity, "Centro de ayuda próximamente", Toast.LENGTH_SHORT).show()
             }
             
             // Cerrar sesión
             btnLogout.setOnClickListener {
-                // TODO: Limpiar sesión y volver a LoginActivity
-                val intent = Intent(this@ProfileActivity, LoginActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
+                logout()
             }
         }
+    }
+    
+    private fun logout() {
+        // Limpiar sesión en preferencias
+        preferencesManager.cerrarSesion()
+        
+        // Navegar al login
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
     
     private fun showPhotoOptionsBottomSheet() {

@@ -18,22 +18,18 @@ import kotlinx.coroutines.launch
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
+    private lateinit var database: AppDatabase
     private lateinit var preferencesManager: PreferencesManager
-    private lateinit var viewModel: com.keylab.mobile.ui.viewmodel.AuthViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        database = AppDatabase.getDatabase(this)
         preferencesManager = PreferencesManager(this)
-        
-        val repository = com.keylab.mobile.data.repository.AuthRepository(preferencesManager)
-        val factory = com.keylab.mobile.ui.viewmodel.AuthViewModelFactory(repository)
-        viewModel = androidx.lifecycle.ViewModelProvider(this, factory)[com.keylab.mobile.ui.viewmodel.AuthViewModel::class.java]
 
         setupListeners()
-        observeViewModel()
     }
 
     private fun setupListeners() {
@@ -43,40 +39,6 @@ class RegisterActivity : AppCompatActivity() {
 
         binding.tvLogin.setOnClickListener {
             finish()
-        }
-    }
-    
-    private fun observeViewModel() {
-        viewModel.registerState.observe(this) { state ->
-            when (state) {
-                is com.keylab.mobile.data.remote.ApiResponse.Loading -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                    binding.registerButton.isEnabled = false
-                }
-                is com.keylab.mobile.data.remote.ApiResponse.Success -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.registerButton.isEnabled = true
-                    Toast.makeText(
-                        this@RegisterActivity,
-                        getString(R.string.success_account_created),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    
-                    val intent = Intent(this@RegisterActivity, MainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                    finish()
-                }
-                is com.keylab.mobile.data.remote.ApiResponse.Error -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.registerButton.isEnabled = true
-                    Toast.makeText(
-                        this@RegisterActivity,
-                        "Error: ${state.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
         }
     }
 
@@ -126,7 +88,55 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         if (isValid) {
-            viewModel.signUp(nombre, email, password)
+            performRegister(nombre, email, password)
+        }
+    }
+
+    private fun performRegister(nombre: String, email: String, password: String) {
+        binding.progressBar.visibility = View.VISIBLE
+        binding.registerButton.isEnabled = false
+
+        lifecycleScope.launch {
+            try {
+                val emailExists = database.usuarioDao().emailExiste(email).first()
+                
+                if (emailExists) {
+                    binding.progressBar.visibility = View.GONE
+                    binding.registerButton.isEnabled = true
+                    binding.emailInputLayout.error = getString(R.string.error_email_already_exists)
+                    return@launch
+                }
+
+                val usuario = Usuario(
+                    nombre = nombre,
+                    email = email,
+                    password = password
+                )
+
+                val userId = database.usuarioDao().insertar(usuario)
+
+                preferencesManager.guardarSesion(userId.toInt())
+
+                Toast.makeText(
+                    this@RegisterActivity,
+                    getString(R.string.success_account_created),
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                val intent = Intent(this@RegisterActivity, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+
+            } catch (e: Exception) {
+                binding.progressBar.visibility = View.GONE
+                binding.registerButton.isEnabled = true
+                Toast.makeText(
+                    this@RegisterActivity,
+                    getString(R.string.error_registration_failed),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 }

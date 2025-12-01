@@ -13,6 +13,7 @@ import com.keylab.mobile.R
 import com.keylab.mobile.data.local.AppDatabase
 import com.keylab.mobile.data.remote.RetrofitClient
 import com.keylab.mobile.data.repository.CarritoRepository
+import com.keylab.mobile.data.repository.OrdenRepository
 import com.keylab.mobile.data.repository.ProductoRepository
 import com.keylab.mobile.databinding.ActivityMainBinding
 import com.keylab.mobile.ui.adapter.Category
@@ -38,9 +39,10 @@ class MainActivity : AppCompatActivity() {
     }
     
     private val carritoViewModel: CarritoViewModel by viewModels {
-        val database = AppDatabase.getDatabase(applicationContext)
-        val repository = CarritoRepository(database.carritoDao())
-        CarritoViewModelFactory(repository)
+        val db = AppDatabase.getDatabase(applicationContext)
+        val carritoRepository = CarritoRepository(db.carritoDao())
+        val ordenRepository = OrdenRepository(db.ordenDao())
+        CarritoViewModelFactory(carritoRepository, ordenRepository)
     }
     
     private lateinit var productoAdapter: ProductoAdapter

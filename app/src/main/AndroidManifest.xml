@@ -8,10 +8,7 @@
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
 
     <application
-        android:name=".KeyLabApplication"
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -68,5 +65,28 @@
             android:name=".ui.OrderReceiptActivity"
             android:exported="false"
             android:parentActivityName=".ui.MainActivity" />
+        <activity
+            android:name=".ui.OrderHistoryActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.ProfileActivity" />
+        <activity
+            android:name=".ui.AddressListActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.ProfileActivity" />
+        <activity
+            android:name=".ui.AddAddressActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.AddressListActivity"
+            android:windowSoftInputMode="adjustResize"/>
+            
+        <activity
+            android:name=".ui.AdminDashboardActivity"
+            android:exported="false" />
+            
+        <activity
+            android:name=".ui.AddEditProductActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.AdminDashboardActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 </manifest>
