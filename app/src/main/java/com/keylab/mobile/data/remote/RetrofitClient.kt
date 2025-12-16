@@ -19,11 +19,17 @@ object RetrofitClient {
     
     // Interceptor para agregar headers de autenticación Supabase
     private val authInterceptor = Interceptor { chain ->
-        val request = chain.request().newBuilder()
+        val originalRequest = chain.request()
+        val builder = originalRequest.newBuilder()
             .addHeader("apikey", BuildConfig.SUPABASE_KEY)
             .addHeader("Authorization", "Bearer ${BuildConfig.SUPABASE_KEY}")
-            .addHeader("Content-Type", "application/json")
-            .build()
+            
+        // Solo agregar Content-Type json si no existe otro (ej: multipart)
+        if (originalRequest.header("Content-Type") == null && originalRequest.body?.contentType() == null) {
+             builder.addHeader("Content-Type", "application/json")
+        }
+            
+        val request = builder.build()
         chain.proceed(request)
     }
     

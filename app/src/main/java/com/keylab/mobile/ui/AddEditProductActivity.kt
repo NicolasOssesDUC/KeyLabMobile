@@ -32,6 +32,16 @@ class AddEditProductActivity : AppCompatActivity() {
     }
 
     private var productoId: Int? = null
+    private var selectedImageFile: java.io.File? = null
+    private var currentProduct: Producto? = null // Para mantener datos originales (URL imagen)
+
+    private val pickImageLauncher = registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+            binding.ivPreview.setImageURI(it)
+            binding.ivPreview.imageTintList = null
+            selectedImageFile = uriToFile(it)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +50,7 @@ class AddEditProductActivity : AppCompatActivity() {
 
         setupToolbar()
         setupCategoriaDropdown()
-        setupImagePreview()
+        setupImageSelection()
         
         // Verificar si es edición
         if (intent.hasExtra(EXTRA_PRODUCTO_ID)) {
@@ -70,15 +80,10 @@ class AddEditProductActivity : AppCompatActivity() {
         binding.actvCategoria.setAdapter(adapter)
     }
 
-    private fun setupImagePreview() {
-        binding.etImageUrl.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) {
-                cargarImagenPreview(binding.etImageUrl.text.toString())
-            }
+    private fun setupImageSelection() {
+        binding.btnSelectImage.setOnClickListener {
+            pickImageLauncher.launch("image/*")
         }
-        
-        // También actualizar al presionar enter o cambiar texto (opcional, puede ser mucho tráfico)
-        // Por ahora solo onFocusChange es suficiente para UX básica
     }
 
     private fun cargarImagenPreview(url: String) {
@@ -92,10 +97,26 @@ class AddEditProductActivity : AppCompatActivity() {
         }
     }
 
+    private fun uriToFile(uri: android.net.Uri): java.io.File? {
+        return try {
+            val inputStream = contentResolver.openInputStream(uri)
+            val file = java.io.File(cacheDir, "temp_image_${System.currentTimeMillis()}.jpg")
+            val outputStream = java.io.FileOutputStream(file)
+            inputStream?.copyTo(outputStream)
+            inputStream?.close()
+            outputStream.close()
+            file
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
     private fun cargarProducto(id: Int) {
         lifecycleScope.launch {
             val producto = viewModel.obtenerProductoPorId(id)
             if (producto != null) {
+                currentProduct = producto // Guardar referencia
                 with(binding) {
                     etNombre.setText(producto.nombre)
                     etPrecio.setText(producto.precio.toInt().toString())
@@ -103,7 +124,7 @@ class AddEditProductActivity : AppCompatActivity() {
                     actvCategoria.setText(producto.categoria, false)
                     etSubcategoria.setText(producto.subcategoria)
                     etDescripcion.setText(producto.descripcion)
-                    etImageUrl.setText(producto.imagenUrl)
+                    // etImageUrl.setText(producto.imagenUrl) // Removed
                     cargarImagenPreview(producto.imagenUrl ?: "")
                 }
             } else {
@@ -120,7 +141,7 @@ class AddEditProductActivity : AppCompatActivity() {
         val categoria = binding.actvCategoria.text.toString().trim()
         val subcategoria = binding.etSubcategoria.text.toString().trim()
         val descripcion = binding.etDescripcion.text.toString().trim()
-        val imagenUrl = binding.etImageUrl.text.toString().trim()
+        // val imagenUrl = binding.etImageUrl.text.toString().trim() // Ya no usamos esto
 
         // Validaciones básicas
         if (nombre.isEmpty() || precioStr.isEmpty() || stockStr.isEmpty() || categoria.isEmpty()) {
@@ -131,14 +152,17 @@ class AddEditProductActivity : AppCompatActivity() {
         val precio = precioStr.toDoubleOrNull() ?: 0.0
         val stock = stockStr.toIntOrNull() ?: 0
 
+        // Si no hay archivo nuevo, usamos la URL que ya tenía el producto (si estamos editando)
+        val finalImageUrl = if (selectedImageFile == null) currentProduct?.imagenUrl else null
+
         val producto = Producto(
             id = productoId ?: 0, // 0 para nuevo (backend ignora/autogenera)
             nombre = nombre,
             precio = precio,
             categoria = categoria,
-            subcategoria = subcategoria,
-            descripcion = descripcion,
-            imagenUrl = imagenUrl.ifEmpty { null },
+            subcategoria = subcategoria.ifEmpty { null },
+            descripcion = descripcion.ifEmpty { null },
+            imagenUrl = finalImageUrl, // null si hay archivo (se llenará después) o URL existente
             stock = stock,
             createdAt = null,
             updatedAt = null
@@ -147,9 +171,9 @@ class AddEditProductActivity : AppCompatActivity() {
         binding.loadingOverlay.visibility = View.VISIBLE
         
         if (productoId != null && productoId != -1) {
-            viewModel.actualizarProducto(producto)
+            viewModel.actualizarProducto(producto, selectedImageFile)
         } else {
-            viewModel.crearProducto(producto)
+            viewModel.crearProducto(producto, selectedImageFile)
         }
     }
 

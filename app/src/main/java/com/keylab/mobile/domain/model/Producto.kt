@@ -19,18 +19,30 @@ import com.google.gson.annotations.SerializedName
 data class Producto(
 
     @PrimaryKey
+    @SerializedName("id")
     val id: Int,
+    
+    @SerializedName("nombre")
     val nombre: String,
+    
+    @SerializedName("precio")
     val precio: Double,
+    
+    @SerializedName("categoria")
     val categoria: String,
+    
+    @SerializedName("subcategoria")
     val subcategoria: String? = null,
+    
+    @SerializedName("descripcion")
     val descripcion: String? = null,
+    
+    @SerializedName("stock")
     val stock: Int,
 
     @SerializedName("imagen_url")
-    @ColumnInfo(name = "imagen_url")  //cambia el nombre de la columna en la tabla
+    @ColumnInfo(name = "imagen_url")
     val imagenUrl: String? = null,
-
 
     @SerializedName("created_at")
     @ColumnInfo(name = "created_at")

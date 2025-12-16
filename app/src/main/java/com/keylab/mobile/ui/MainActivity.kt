@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.productos.collect { productos ->
                 // Filtrar según categoría seleccionada
                 val filteredProducts = if (selectedCategory == "Todos") {
-                    productos.take(6) // Mostrar solo 6 cuando es "Todos"
+                    productos // Mostrar todos
                 } else {
                     productos.filter { it.categoria == selectedCategory }
                 }
@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.productos.collect { productos ->
                 val filteredProducts = if (selectedCategory == "Todos") {
-                    productos.take(6)
+                    productos
                 } else {
                     productos.filter { it.categoria == selectedCategory }
                 }

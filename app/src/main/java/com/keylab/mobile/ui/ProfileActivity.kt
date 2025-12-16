@@ -21,6 +21,8 @@ import com.keylab.mobile.data.local.AppDatabase
 import com.keylab.mobile.data.local.PreferencesManager
 import com.keylab.mobile.databinding.ActivityProfileBinding
 import com.keylab.mobile.databinding.BottomSheetPhotoOptionsBinding
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import java.io.File
@@ -94,13 +96,56 @@ class ProfileActivity : AppCompatActivity() {
                     usuario?.let {
                         binding.tvUserName.text = it.nombre
                         binding.tvUserEmail.text = it.email
-                        // Aquí también podríamos cargar la foto si estuviera guardada en la BD/Supabase
+                        
+                        // Actualizar inicial
+                        if (it.nombre.isNotEmpty()) {
+                            val cardView = binding.root.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardAvatar)
+                            val textView = cardView?.findViewById<android.widget.TextView>(android.R.id.text1)
+                            textView?.text = it.nombre.first().toString().uppercase()
+                        }
+                        
+                        // Cargar foto si existe
+                        if (!it.avatarUrl.isNullOrEmpty()) {
+                            loadProfileImage(it.avatarUrl)
+                        }
                     }
                 }
             }
         } else {
             // Si no hay usuario válido, forzar logout
             logout()
+        }
+    }
+    
+    // Sobrecarga para cargar desde URL (String)
+    private fun loadProfileImage(url: String) {
+        val avatarCardView = binding.root.findViewById<com.google.android.material.card.MaterialCardView>(
+            R.id.cardAvatar
+        )
+        
+        avatarCardView?.let { cardView ->
+            val textView = cardView.findViewById<android.widget.TextView>(android.R.id.text1)
+            textView?.visibility = android.view.View.GONE
+            
+            var imageView = cardView.findViewById<android.widget.ImageView>(R.id.ivAvatar)
+            if (imageView == null) {
+                imageView = android.widget.ImageView(this).apply {
+                    id = R.id.ivAvatar
+                    scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
+                    layoutParams = android.view.ViewGroup.LayoutParams(
+                        android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                        android.view.ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                }
+                cardView.addView(imageView)
+            }
+            
+            Glide.with(this)
+                .load(url)
+                .circleCrop()
+                .placeholder(R.drawable.ic_placeholder_image) 
+                .error(R.drawable.ic_placeholder_image)
+                .into(imageView)
         }
     }
     
@@ -142,14 +187,20 @@ class ProfileActivity : AppCompatActivity() {
     }
     
     private fun logout() {
-        // Limpiar sesión en preferencias
-        preferencesManager.cerrarSesion()
+        // Cerrar sesión de Google explícitamente
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+        val googleSignInClient = GoogleSignIn.getClient(this, gso)
         
-        // Navegar al login
-        val intent = Intent(this, LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
+        googleSignInClient.signOut().addOnCompleteListener(this) {
+            // Limpiar sesión en preferencias
+            preferencesManager.cerrarSesion()
+            
+            // Navegar al login
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+        }
     }
     
     private fun showPhotoOptionsBottomSheet() {

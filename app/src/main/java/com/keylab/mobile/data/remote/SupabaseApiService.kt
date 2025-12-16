@@ -1,6 +1,7 @@
 package com.keylab.mobile.data.remote
 
 import com.keylab.mobile.domain.model.Producto
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -60,7 +61,7 @@ interface SupabaseApiService {
     @PATCH("productos")
     suspend fun actualizarProducto(
         @Query("id") id: String, // "eq.{id}"
-        @Body producto: Producto
+        @Body producto: Any // Aceptamos Map o Producto parcial
     ): Response<List<Producto>>
     
     // ═══ DELETE - Eliminar ═══
@@ -69,5 +70,23 @@ interface SupabaseApiService {
     @DELETE("productos")
     suspend fun eliminarProducto(
         @Query("id") id: String // "eq.{id}"
+    ): Response<Unit>
+
+    // ═══ AUTH ═══
+
+    @POST
+    suspend fun signInWithIdToken(
+        @Url url: String,
+        @Query("grant_type") grantType: String = "id_token",
+        @Body request: SupabaseAuthRequest
+    ): Response<SupabaseAuthResponse>
+
+    // ═══ STORAGE - Subir Imagen ═══
+    @Multipart
+    @POST
+    suspend fun subirImagen(
+        @Url url: String,
+        @Part file: MultipartBody.Part,
+        @Header("x-upsert") upsert: String = "true"
     ): Response<Unit>
 }

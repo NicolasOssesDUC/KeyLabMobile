@@ -95,13 +95,33 @@ class ProductoViewModel(
     
     /**
      * Crear nuevo producto en Supabase → Room
+     * Opcionalmente sube imagen si se provee archivo
      */
-    fun crearProducto(producto: Producto) {
+    fun crearProducto(producto: Producto, imageFile: java.io.File? = null) {
         viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
+
+            var finalProducto = producto
             
-            when (val result = repository.crearProducto(producto)) {
+            // 1. Subir imagen si existe
+            if (imageFile != null) {
+                when (val uploadResult = repository.subirImagen(imageFile)) {
+                    is ApiResponse.Success -> {
+                        // Actualizar URL en el producto
+                        finalProducto = finalProducto.copy(imagenUrl = uploadResult.data)
+                    }
+                    is ApiResponse.Error -> {
+                        _isLoading.value = false
+                        _error.value = "Error subiendo imagen: ${uploadResult.message}"
+                        return@launch
+                    }
+                    else -> {}
+                }
+            }
+            
+            // 2. Crear producto
+            when (val result = repository.crearProducto(finalProducto)) {
                 is ApiResponse.Success -> {
                     _isLoading.value = false
                     _successMessage.value = "Producto creado: ${result.data.nombre}"
@@ -118,12 +138,30 @@ class ProductoViewModel(
     /**
      * Actualizar producto existente
      */
-    fun actualizarProducto(producto: Producto) {
+    fun actualizarProducto(producto: Producto, imageFile: java.io.File? = null) {
         viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
+
+            var finalProducto = producto
             
-            when (val result = repository.actualizarProducto(producto)) {
+            // 1. Subir imagen si existe
+            if (imageFile != null) {
+                when (val uploadResult = repository.subirImagen(imageFile)) {
+                    is ApiResponse.Success -> {
+                        finalProducto = finalProducto.copy(imagenUrl = uploadResult.data)
+                    }
+                    is ApiResponse.Error -> {
+                        _isLoading.value = false
+                        _error.value = "Error subiendo imagen: ${uploadResult.message}"
+                        return@launch
+                    }
+                    else -> {}
+                }
+            }
+            
+            // 2. Actualizar
+            when (val result = repository.actualizarProducto(finalProducto)) {
                 is ApiResponse.Success -> {
                     _isLoading.value = false
                     _successMessage.value = "Producto actualizado"
